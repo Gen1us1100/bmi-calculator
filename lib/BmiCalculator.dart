@@ -10,9 +10,13 @@ class BmiCalculator extends StatefulWidget {
 }
 
 class _BmiCalculator extends State<BmiCalculator> {
-  int currentindex = 0; //variable for Radio Button
+  int currentindex = 0;//variable for Radio Button
+  String finalresult = "";
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -65,6 +69,7 @@ class _BmiCalculator extends State<BmiCalculator> {
                 TextField(
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
+                  controller: heightController,
                   decoration: InputDecoration(
                       hintText: "Enter your height",
                       filled: true,
@@ -90,6 +95,7 @@ class _BmiCalculator extends State<BmiCalculator> {
                 TextField(
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
+                  controller: weightController,
                   decoration: InputDecoration(
                       hintText: "Enter your weight",
                       filled: true,
@@ -117,7 +123,10 @@ class _BmiCalculator extends State<BmiCalculator> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Result()));
+                      double height = double.parse(heightController.value.text);
+                      double weight = double.parse(weightController.value.text);
+                      calculateBmi(height, weight);
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => Result(bmi: finalresult,)));
                     },
                   ),
                 ),
@@ -129,6 +138,15 @@ class _BmiCalculator extends State<BmiCalculator> {
       ),
     );
   }
+  //Calculating function
+  void calculateBmi(double height,double weight){
+    double result = 10000*(weight / (height * height));
+    String bmi = result.toStringAsFixed(2);
+    setState(() {
+      finalresult = bmi;
+    });
+  }
+
 
   //Function to change index value
   void changeIndex(int index) {
